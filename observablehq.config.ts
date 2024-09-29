@@ -14,6 +14,8 @@ export default {
         {name: "NYC Taxi Rides", path: "/nyc-taxi-rides"},
         {name: "Gaia Star Catalog", path: "/gaia-star-catalog"},
         {name: "Observable Latency", path: "/observable-latency"},
+        {name: "Cached/pre-baked voter registration statistics", path: "/voting-cached"},
+        {name: "No-cache voter registration statistics", path: "/voting-nocache"}
       ]
     },
     {

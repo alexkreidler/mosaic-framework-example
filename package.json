@@ -10,7 +10,19 @@
     "observable": "observable"
   },
   "dependencies": {
-    "@observablehq/framework": "^1.9.0"
+    "@observablehq/framework": "^1.9.0",
+    "@uwdata/flechette": "^1.1.0",
+    "@uwdata/mosaic-core": "^0.11.0",
+    "@uwdata/mosaic-duckdb": "^0.11.0",
+    "@uwdata/mosaic-spec": "^0.11.0",
+    "@uwdata/vgplot": "^0.11.0",
+    "global-jsdom": "^25.0.0",
+    "jsdom": "^25.0.1",
+    "nanoid": "^5.0.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "tsx": "^4.19.1"
   },
   "engines": {
     "node": ">=18"
