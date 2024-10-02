@@ -1,13 +1,14 @@
 import * as vg from "@uwdata/vgplot";
-import { DuckDB } from "@uwdata/mosaic-duckdb";
-import { decodeIPC } from "@uwdata/mosaic-core";
+import { DuckDB, dataServer } from "@uwdata/mosaic-duckdb";
+import { decodeIPC, socketConnector } from "@uwdata/mosaic-core";
 import { Table, tableToIPC } from "@uwdata/flechette";
 
 import { Spec, astToDOM, parseSpec } from "@uwdata/mosaic-spec";
 import "global-jsdom/register";
 import { nanoid } from "nanoid";
-import { readFile, writeFile, mkdir, rm } from "fs/promises";
+import { readFile, writeFile, mkdir, rm, cp, stat } from "fs/promises";
 import { join } from "path";
+import { exit } from "process";
 
 // Deps: @uwdata/vgplot @uwdata/mosaic-duckdb @uwdata/mosaic-core @uwdata/flechette @uwdata/mosaic-spec global-jsdom jsdom nanoid @types/node
 
@@ -31,7 +32,9 @@ export function nodeConnector(db = new DuckDB()) {
         return db.query(sql);
     }
   };
+}
 
+export function wrapConnector(conn) {
   const wrapSaveQueries = (func) => async (query) => {
     const id = nanoid(8);
     queryMap[query.sql] = { ...query, id };
@@ -48,11 +51,11 @@ export function nodeConnector(db = new DuckDB()) {
     return out;
   };
 
-  return { query: wrapSaveQueries(query) };
+  return { ...conn, query: wrapSaveQueries(conn.query) };
 }
 
 async function writePrebakedData(dir: string) {
-  await rm(dir, {recursive: true, force: true});
+  await rm(dir, { recursive: true, force: true });
   await mkdir(dir, { recursive: true });
   await writeFile(join(dir, "queries.json"), JSON.stringify(queryMap, null, 4));
 
@@ -61,9 +64,10 @@ async function writePrebakedData(dir: string) {
   }
 }
 
-export async function specToSVG(spec: Spec): Promise<string> {
+export async function specToSVG(spec: Spec, createBundle: boolean = false): Promise<string> {
   const coord = vg.coordinator();
-  coord.databaseConnector(nodeConnector());
+  const conn = socketConnector() 
+  coord.databaseConnector(wrapConnector(conn));
   // coord.manager.logQueries(true);
   const ast = parseSpec(spec);
 
@@ -72,18 +76,58 @@ export async function specToSVG(spec: Spec): Promise<string> {
   const sync = element.value.synch;
   // wait for all queries to complete and the plot to re-render
   await sync.promise;
+  console.log("Rendering done");
+
+  if (createBundle) {
+    const queries = Object.keys(queryMap);
+    await conn.query({ type: "create-bundle", name: "line-bundle", queries });
+    console.log("Created bundle with "+ queries.length + " queries");
+  }
   return element.outerHTML;
+}
+async function exists(f) {
+  try {
+    await stat(f);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 async function main() {
   const spec = JSON.parse(await readFile("./docs/line.json", "utf8"));
-  const html = await specToSVG(spec as any);
+  const bundleFormat = process.argv[2] ?? "custom";
+  if (!["mosaic", "custom"].includes(bundleFormat)) {
+    console.error("Invalid bundle format, must be 'mosaic' or 'custom'");
+    exit(1);
+  }
+  console.log(`Starting prebake for line.json, using ${bundleFormat} bundle format`);
+
+  let html;
+  try {
+    html = await specToSVG(spec as any, bundleFormat =="mosiac");
+  } catch (error) {
+    console.error(error);
+  }
   
-  await writePrebakedData("./docs/data/prebaked");
-  console.log("Wrote prebaked data");
-  // Need the dir to be created by above
-  await writeFile("./docs/data/prebaked/out.html", html);
-  console.log("Wrote SVG");
+  if (bundleFormat == "custom") {
+    await writePrebakedData("./docs/data/prebaked");
+    console.log("Wrote prebaked data");
+    await writeFile("./docs/data/prebaked/out.html", html);
+    console.log("Wrote SVG");
+  } else if (bundleFormat == "mosaic") {
+    if (await exists("docs/.mosaic/bundle")) {
+      await cp("docs/.mosaic/bundle", "docs/data/bundle", {recursive:true})
+    } else {
+      await cp(".mosaic/bundle", "docs/data/bundle", {recursive:true})
+    }
+  }
+  exit()
 }
 
-main().then(console.log).catch(console.error);
+// async function load() {
+//   const conn = socketConnector();
+//   await conn.query({ type: "load-bundle", name: "line-bundle"});
+// }
+
+main().catch(console.error);

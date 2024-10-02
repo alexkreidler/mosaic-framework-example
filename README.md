@@ -14,16 +14,23 @@ The examples demonstrate:
 
 ```sh
 npm install
-tsx pre-bake.ts
+tsx docs/pre-bake.ts
 npm run dev
 ```
 
 1. Install the dependencies
-2. Run the server-side/NodeJS query caching script to generate the `data/prebaked` folder: `tsx pre-bake.ts`
+2. Run the server-side/NodeJS query caching script to generate the `data/prebaked` folder: `tsx docs/pre-bake.ts`
 3. Run the dev script `npm run dev`
 4. Open the example in the browser: http://127.0.0.1:3000/voting-cached
 5. You should see the line chart, and the tooltip should work. It is served from the static arrow files. 
 6. You can compare its loading speed to the the non-cached version: http://127.0.0.1:3000/voting-nocache using network throttling in DevTools
+
+How to test the Mosaic bundle format
+1. Install the deps
+2. Run `node docs/duckdb-server.js` or any other of the 3 Mosaic DuckDB servers (Python, Rust, NodeJS). It should be serving a socket connection on `ws://localhost:3000`
+3. Run `tsx docs/pre-bake.ts mosaic`
+5. Run the observable frameowrk frontend `npm run dev`
+6. Go to http://127.0.0.1:3000/voting-bundle
 
 TODOs:
 - Figure out whether this approach of caching at the connector level is the best option.

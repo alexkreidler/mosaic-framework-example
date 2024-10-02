@@ -1,0 +1,11 @@
+{
+  "tables": [
+    "dates"
+  ],
+  "queries": [
+    "2379c43bc7cccd3e559c69e693364e4474c1c4645a89acc075f4d7c7ee6ccb37.json",
+    "e80012775d3adc0c2b9cde42a318f7ec3fc635cc0cefa54d4f6573087e4b52df.json",
+    "2d1199e163b1f240e541adf01a38747d9f1f474b7b59073fe42a0c55f55e20cb.arrow",
+    "131f4b07724818769963a876c72e440b38a55fe75d265f1520d5c702c0a08134.arrow"
+  ]
+}

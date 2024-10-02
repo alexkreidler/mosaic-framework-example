@@ -15,7 +15,8 @@ export default {
         {name: "Gaia Star Catalog", path: "/gaia-star-catalog"},
         {name: "Observable Latency", path: "/observable-latency"},
         {name: "Cached/pre-baked voter registration statistics", path: "/voting-cached"},
-        {name: "No-cache voter registration statistics", path: "/voting-nocache"}
+        {name: "No-cache voter registration statistics", path: "/voting-nocache"},
+        {name: "Cache bundle voter registration statistics", path: "/voting-bundle"}
       ]
     },
     {

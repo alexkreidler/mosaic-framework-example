@@ -2,27 +2,27 @@
     "CREATE TEMP TABLE IF NOT EXISTS dates AS SELECT * FROM read_parquet('https://raw.githubusercontent.com/alexkreidler/nc-elections/main/data/voter_registration_orange.parquet');\nCREATE TEMP TABLE IF NOT EXISTS filtered AS SELECT * FROM dates WHERE registr_dt < '2025-01-01' AND registr_dt > '2020-01-01'": {
         "type": "exec",
         "sql": "CREATE TEMP TABLE IF NOT EXISTS dates AS SELECT * FROM read_parquet('https://raw.githubusercontent.com/alexkreidler/nc-elections/main/data/voter_registration_orange.parquet');\nCREATE TEMP TABLE IF NOT EXISTS filtered AS SELECT * FROM dates WHERE registr_dt < '2025-01-01' AND registr_dt > '2020-01-01'",
-        "id": "OU2k2_Rf"
+        "id": "drSQ0tA9"
     },
     "DESCRIBE SELECT MAKE_DATE(2012, MONTH(\"registr_dt\"), 1) AS \"col0\", CAST(YEAR(registr_dt) AS STRING) AS \"col1\" FROM \"filtered\" AS \"source\"": {
         "type": "arrow",
         "sql": "DESCRIBE SELECT MAKE_DATE(2012, MONTH(\"registr_dt\"), 1) AS \"col0\", CAST(YEAR(registr_dt) AS STRING) AS \"col1\" FROM \"filtered\" AS \"source\"",
-        "id": "AiIxuiwq"
+        "id": "5LZq9Lni"
     },
     "DESCRIBE SELECT COUNT(*)::INTEGER AS \"column\" FROM \"filtered\" AS \"source\" GROUP BY ALL": {
         "type": "arrow",
         "sql": "DESCRIBE SELECT COUNT(*)::INTEGER AS \"column\" FROM \"filtered\" AS \"source\" GROUP BY ALL",
-        "id": "lnAhYbTN"
+        "id": "RfpJFFrn"
     },
     "SELECT MIN(MAKE_DATE(2012, MONTH(\"registr_dt\"), 1)) AS \"min\", MAX(MAKE_DATE(2012, MONTH(\"registr_dt\"), 1)) AS \"max\" FROM \"filtered\"": {
         "type": "arrow",
         "sql": "SELECT MIN(MAKE_DATE(2012, MONTH(\"registr_dt\"), 1)) AS \"min\", MAX(MAKE_DATE(2012, MONTH(\"registr_dt\"), 1)) AS \"max\" FROM \"filtered\"",
         "persist": true,
-        "id": "2tP90IpN"
+        "id": "P1s2K4D8"
     },
     "SELECT MIN(\"x\") AS \"x\", ARG_MIN(\"y\", \"x\") AS \"y\", \"stroke\" FROM (SELECT MAKE_DATE(2012, MONTH(\"registr_dt\"), 1) AS \"x\", CAST(YEAR(registr_dt) AS STRING) AS \"stroke\", COUNT(*)::INTEGER AS \"y\" FROM \"filtered\" AS \"source\" GROUP BY \"x\", \"stroke\") GROUP BY FLOOR((epoch_ms(\"x\")::DOUBLE - 1325376000000) * 3.244195688225539e-8::DOUBLE)::INTEGER, \"stroke\" UNION SELECT MAX(\"x\") AS \"x\", ARG_MAX(\"y\", \"x\") AS \"y\", \"stroke\" FROM (SELECT MAKE_DATE(2012, MONTH(\"registr_dt\"), 1) AS \"x\", CAST(YEAR(registr_dt) AS STRING) AS \"stroke\", COUNT(*)::INTEGER AS \"y\" FROM \"filtered\" AS \"source\" GROUP BY \"x\", \"stroke\") GROUP BY FLOOR((epoch_ms(\"x\")::DOUBLE - 1325376000000) * 3.244195688225539e-8::DOUBLE)::INTEGER, \"stroke\" UNION SELECT ARG_MIN(\"x\", \"y\") AS \"x\", MIN(\"y\") AS \"y\", \"stroke\" FROM (SELECT MAKE_DATE(2012, MONTH(\"registr_dt\"), 1) AS \"x\", CAST(YEAR(registr_dt) AS STRING) AS \"stroke\", COUNT(*)::INTEGER AS \"y\" FROM \"filtered\" AS \"source\" GROUP BY \"x\", \"stroke\") GROUP BY FLOOR((epoch_ms(\"x\")::DOUBLE - 1325376000000) * 3.244195688225539e-8::DOUBLE)::INTEGER, \"stroke\" UNION SELECT ARG_MAX(\"x\", \"y\") AS \"x\", MAX(\"y\") AS \"y\", \"stroke\" FROM (SELECT MAKE_DATE(2012, MONTH(\"registr_dt\"), 1) AS \"x\", CAST(YEAR(registr_dt) AS STRING) AS \"stroke\", COUNT(*)::INTEGER AS \"y\" FROM \"filtered\" AS \"source\" GROUP BY \"x\", \"stroke\") GROUP BY FLOOR((epoch_ms(\"x\")::DOUBLE - 1325376000000) * 3.244195688225539e-8::DOUBLE)::INTEGER, \"stroke\" ORDER BY \"stroke\", \"x\"": {
         "type": "arrow",
         "sql": "SELECT MIN(\"x\") AS \"x\", ARG_MIN(\"y\", \"x\") AS \"y\", \"stroke\" FROM (SELECT MAKE_DATE(2012, MONTH(\"registr_dt\"), 1) AS \"x\", CAST(YEAR(registr_dt) AS STRING) AS \"stroke\", COUNT(*)::INTEGER AS \"y\" FROM \"filtered\" AS \"source\" GROUP BY \"x\", \"stroke\") GROUP BY FLOOR((epoch_ms(\"x\")::DOUBLE - 1325376000000) * 3.244195688225539e-8::DOUBLE)::INTEGER, \"stroke\" UNION SELECT MAX(\"x\") AS \"x\", ARG_MAX(\"y\", \"x\") AS \"y\", \"stroke\" FROM (SELECT MAKE_DATE(2012, MONTH(\"registr_dt\"), 1) AS \"x\", CAST(YEAR(registr_dt) AS STRING) AS \"stroke\", COUNT(*)::INTEGER AS \"y\" FROM \"filtered\" AS \"source\" GROUP BY \"x\", \"stroke\") GROUP BY FLOOR((epoch_ms(\"x\")::DOUBLE - 1325376000000) * 3.244195688225539e-8::DOUBLE)::INTEGER, \"stroke\" UNION SELECT ARG_MIN(\"x\", \"y\") AS \"x\", MIN(\"y\") AS \"y\", \"stroke\" FROM (SELECT MAKE_DATE(2012, MONTH(\"registr_dt\"), 1) AS \"x\", CAST(YEAR(registr_dt) AS STRING) AS \"stroke\", COUNT(*)::INTEGER AS \"y\" FROM \"filtered\" AS \"source\" GROUP BY \"x\", \"stroke\") GROUP BY FLOOR((epoch_ms(\"x\")::DOUBLE - 1325376000000) * 3.244195688225539e-8::DOUBLE)::INTEGER, \"stroke\" UNION SELECT ARG_MAX(\"x\", \"y\") AS \"x\", MAX(\"y\") AS \"y\", \"stroke\" FROM (SELECT MAKE_DATE(2012, MONTH(\"registr_dt\"), 1) AS \"x\", CAST(YEAR(registr_dt) AS STRING) AS \"stroke\", COUNT(*)::INTEGER AS \"y\" FROM \"filtered\" AS \"source\" GROUP BY \"x\", \"stroke\") GROUP BY FLOOR((epoch_ms(\"x\")::DOUBLE - 1325376000000) * 3.244195688225539e-8::DOUBLE)::INTEGER, \"stroke\" ORDER BY \"stroke\", \"x\"",
-        "id": "S70gkjFk"
+        "id": "GOlwQAUD"
     }
 }
